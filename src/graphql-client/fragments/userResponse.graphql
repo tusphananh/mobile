@@ -1,0 +1,12 @@
+fragment UserResponseFragment on User {
+  id
+  firstName
+  lastName
+  phone
+  balance
+  createdAt
+  updatedAt
+  items {
+    ...ItemResponseFragment
+  }
+}

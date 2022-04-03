@@ -1,0 +1,7 @@
+fragment ItemResponseFragment on Item {
+  id
+  name
+  description
+  price
+  realValue
+}

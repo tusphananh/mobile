@@ -1,0 +1,13 @@
+query Login($phone: String!, $password: String! ) {
+	login( phone: $phone, password: $password) {
+		code
+		success
+		errors {
+            ...ErrosResponseFragment
+        }
+        data {
+            ...UserResponseFragment
+        }
+	}
+}
+
