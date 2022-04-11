@@ -1,9 +1,9 @@
 export enum DashBoardTabName {
-  NEAR_BY = "Near By",
-  MESSAGES = "Messages",
-  ITEMS = "Items",
-  ACTIVITIES = "Activities",
-  SEARCH = "Search",
+  NEAR_BY = 'Near By',
+  MESSAGES = 'Messages',
+  ITEMS = 'Items',
+  ACTIVITIES = 'Activities',
+  SEARCH = 'Search',
 }
 
 export interface Position {

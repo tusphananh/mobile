@@ -1,12 +1,13 @@
-import MapboxGL from '@react-native-mapbox-gl/maps'
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { MAPBOX_TOKEN } from 'react-native-dotenv'
+import MapboxGL from '@react-native-mapbox-gl/maps';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import env from '../../config/env';
 
-MapboxGL.setAccessToken(MAPBOX_TOKEN)
+MapboxGL.setAccessToken(env.MAPBOX_TOKEN);
 
 const styles = StyleSheet.create({
   page: {
+    display: 'flex',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -20,16 +21,16 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-})
+});
 
-const Map = () => {
+const Map: React.FC<{}> = () => {
   return (
     <View style={styles.page}>
       <View style={styles.container}>
         <MapboxGL.MapView style={styles.map} />
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default Map
+export default Map;

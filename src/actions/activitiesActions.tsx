@@ -10,11 +10,11 @@ import {
   RemoveProvideActivityAction,
   RemoveRentActivityAction,
   SetChatSocketAction,
-} from "../constants/ActivitiesConstants";
-import { getSocket } from "../libs/socket";
-
+} from '../constants/ActivitiesConstants';
+import {getSocket} from '../libs/socket';
+import env from '../config/env';
 export const addProvideActivity = (
-  activity: ActivityMaybe
+  activity: ActivityMaybe,
 ): AddProvideActivityAction => ({
   type: ActivitiesTypes.ADD_PROVIDE_ACTIVITY,
   payload: {
@@ -23,7 +23,7 @@ export const addProvideActivity = (
 });
 
 export const addProvideActivities = (
-  activities: ActivityMaybe[]
+  activities: ActivityMaybe[],
 ): AddProvideActivitiesAction => ({
   type: ActivitiesTypes.ADD_PROVIDE_ACTIVITIES,
   payload: {
@@ -32,7 +32,7 @@ export const addProvideActivities = (
 });
 
 export const removeProvideActivity = (
-  activityId: string
+  activityId: string,
 ): RemoveProvideActivityAction => ({
   type: ActivitiesTypes.REMOVE_PROVIDE_ACTIVITY,
   payload: {
@@ -41,7 +41,7 @@ export const removeProvideActivity = (
 });
 
 export const addRentActivity = (
-  activity: ActivityMaybe
+  activity: ActivityMaybe,
 ): AddRentActivityAction => ({
   type: ActivitiesTypes.ADD_RENT_ACTIVITY,
   payload: {
@@ -50,7 +50,7 @@ export const addRentActivity = (
 });
 
 export const addRentActivities = (
-  activities: ActivityMaybe[]
+  activities: ActivityMaybe[],
 ): AddRentActivitiesAction => ({
   type: ActivitiesTypes.ADD_RENT_ACTIVITIES,
   payload: {
@@ -59,7 +59,7 @@ export const addRentActivities = (
 });
 
 export const removeRentActivity = (
-  activityId: string
+  activityId: string,
 ): RemoveRentActivityAction => ({
   type: ActivitiesTypes.REMOVE_RENT_ACTIVITY,
   payload: {
@@ -75,8 +75,8 @@ export const addMessage = (message?: MessageMaybe): AddMessageAction => ({
 });
 
 export const setChatSocket = (): SetChatSocketAction => {
-  const url = `${process.env.NEXT_PUBLIC_CHAT_SOCKET_URL}`;
-  console.log(url);
+  const url = `${env.CHAT_SOCKET_URL}`;
+  // console.log(url);
   const socket = getSocket(url);
   return {
     type: ActivitiesTypes.SET_CHAT_SOCKET,

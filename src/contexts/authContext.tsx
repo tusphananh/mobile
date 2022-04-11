@@ -1,11 +1,12 @@
-import {
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {
   createContext,
   Dispatch,
   FC,
   useContext,
   useEffect,
-  useReducer
-} from 'react'
+  useReducer,
+} from 'react';
 import {
   addItemAction,
   checkSessionFailure,
@@ -16,100 +17,110 @@ import {
   registerSuccess,
   requestCheckSession,
   requestLogin,
-  requestRegister
-} from '../actions/authActions'
-import { AuthAction, AuthState } from '../constants/AuthConstant'
+  requestRegister,
+} from '../actions/authActions';
+import {AuthAction, AuthState} from '../constants/AuthConstant';
 import {
   useAddItemMutation,
   useCheckSessionLazyQuery,
   useLoginLazyQuery,
-  useRegisterMutation
-} from '../graphql-generated/graphql'
-import AuthReducer from '../reducers/authReducer'
+  useRegisterMutation,
+} from '../graphql-generated/graphql';
+import AuthReducer from '../reducers/authReducer';
 
 /**
  * Development context
  */
 const initialState: AuthState = {
-  // isAuthenticated: true,
   isAuthenticated: false,
   user: null,
+  // isAuthenticated: true,
+  // user: {
+  //   id: '1',
+  //   balance: 0,
+  //   createdAt: '2020-01-01T00:00:00.000Z',
+  //   firstName: 'Tu',
+  //   lastName: 'Nguyen',
+  //   items: [],
+  //   phone: '0987654321',
+  //   updatedAt: '2020-01-01T00:00:00.000Z',
+  // },
   errors: [],
   isFetching: true,
-}
+};
 
 export const AuthContext = createContext<{
-  authState: AuthState
-  authDispatch: Dispatch<AuthAction>
+  authState: AuthState;
+  authDispatch: Dispatch<AuthAction>;
   authRegsiter: (
     phone: string,
     firstName: string,
     lastName: string,
     password: string,
-  ) => Promise<void>
+  ) => Promise<void>;
   addItem: (
     name: string,
     price: number,
     realValue: number,
     description: string,
-  ) => void
-  authLogin: (phone: string, password: string) => Promise<void>
+  ) => void;
+  authLogin: (phone: string, password: string) => Promise<void>;
 }>({
   authState: initialState,
   authDispatch: () => undefined,
   authRegsiter: async () => {},
   authLogin: async () => {},
   addItem: () => {},
-})
+});
 
-export const AuthProvider: FC = ({ children }) => {
-  const [authState, authDispatch] = useReducer(AuthReducer, initialState)
+export const AuthProvider: FC = ({children}) => {
+  const [authState, authDispatch] = useReducer(AuthReducer, initialState);
   const [checkSession] = useCheckSessionLazyQuery({
-    onCompleted: (data) => {
-      const response = data?.checkSession
+    onCompleted: data => {
+      const response = data?.checkSession;
       if (response?.success) {
-        authDispatch(checkSessionSuccess(response.data!))
+        authDispatch(checkSessionSuccess(response.data!));
       } else {
-        authDispatch(checkSessionFailure())
-        // console.log('check session error')
+        authDispatch(checkSessionFailure());
+        console.log('check session error');
       }
     },
-    onError: () => {
-      // console.log(error)
-      authDispatch(checkSessionFailure())
+    onError: error => {
+      console.log(error);
+      authDispatch(checkSessionFailure());
     },
-  })
+  });
   const [loginLazyQuery] = useLoginLazyQuery({
-    onCompleted: (data) => {
-      console.log('somedata', data)
+    onCompleted: data => {
+      console.log('somedata', data);
       if (data.login) {
         if (data.login.success) {
-          authDispatch(loginSuccess(data.login.data!))
+          authDispatch(loginSuccess(data.login.data!));
         } else {
-          authDispatch(loginFailure(data.login.errors))
+          authDispatch(loginFailure(data.login.errors));
         }
       }
     },
-  })
+  });
 
   const [addItemMutaion] = useAddItemMutation({
-    onCompleted: (data) => {
+    onCompleted: data => {
       data.addItem?.success &&
         data.addItem.data &&
-        authDispatch(addItemAction(data.addItem.data))
+        authDispatch(addItemAction(data.addItem.data));
     },
-  })
+  });
   const [registerMutation] = useRegisterMutation({
-    onCompleted: (data) => {
+    onCompleted: data => {
       if (data.register) {
         if (data.register.success) {
-          authDispatch(registerSuccess(data.register.data!))
+          authDispatch(registerSuccess(data.register.data!));
         } else {
-          authDispatch(registerFailure(data.register.errors))
+          authDispatch(registerFailure(data.register.errors));
         }
       }
     },
-  })
+  });
 
   const authRegsiter = async (
     phone: string,
@@ -117,7 +128,7 @@ export const AuthProvider: FC = ({ children }) => {
     lastName: string,
     password: string,
   ) => {
-    authDispatch(requestRegister())
+    authDispatch(requestRegister());
     await registerMutation({
       variables: {
         phone,
@@ -125,8 +136,8 @@ export const AuthProvider: FC = ({ children }) => {
         lastName,
         password,
       },
-    })
-  }
+    });
+  };
   const addItem = (
     name: string,
     price: number,
@@ -144,20 +155,21 @@ export const AuthProvider: FC = ({ children }) => {
           realValue,
           description,
         },
-      })
-  }
+      });
+  };
   const authLogin = async (phone: string, password: string) => {
-    authDispatch(requestLogin())
-    loginLazyQuery({ variables: { phone, password } })
-  }
+    authDispatch(requestLogin());
+
+    loginLazyQuery({variables: {phone, password}});
+  };
   /**
    * Check user have session or not
    */
 
   useEffect(() => {
-    authDispatch(requestCheckSession())
-    checkSession()
-  }, [])
+    authDispatch(requestCheckSession());
+    checkSession();
+  }, []);
 
   const authValues = {
     authState,
@@ -165,13 +177,13 @@ export const AuthProvider: FC = ({ children }) => {
     authLogin,
     authRegsiter,
     addItem,
-  }
+  };
 
   return (
     <AuthContext.Provider value={authValues}>{children}</AuthContext.Provider>
-  )
-}
+  );
+};
 
 export function useAuthContext() {
-  return useContext(AuthContext)
+  return useContext(AuthContext);
 }

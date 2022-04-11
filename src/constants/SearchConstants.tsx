@@ -1,7 +1,7 @@
-import { Socket } from 'socket.io-client'
-import { User } from '../graphql-generated/graphql'
-import { Position } from './DashBoardConstants'
-import { ClientToServerEvents, ServerToClientEvents } from './SocketConstants'
+import {Socket} from 'socket.io-client';
+import {User} from '../graphql-generated/graphql';
+import {Position} from './DashBoardConstants';
+import {ClientToServerEvents, ServerToClientEvents} from './SocketConstants';
 
 export enum SearchTypes {
   CLEAR_NEAR_BY_ITEMS = 'CLEAR_NEAR_BY_ITEMS',
@@ -24,127 +24,127 @@ export enum SearchTypes {
 }
 
 export interface SearchItem {
-  id: string
-  userId: string
-  socketId: string
-  name: string
-  lng: number
-  lat: number
-  radius: number
-  duration: number
+  id: string;
+  userId: string;
+  socketId: string;
+  name: string;
+  lng: number;
+  lat: number;
+  radius: number;
+  duration: number;
 }
 
 export interface SearchResult {
-  searchId: string
-  id: string
-  providerPosition: Position
-  provider: User
-  name: string
-  itemName: string
-  itemPrice: number
-  itemRealValue: number
-  itemDescription: string
-  totalPrice: number
-  distance: number
-  duration: number
+  searchId: string;
+  id: string;
+  providerPosition: Position;
+  provider: User;
+  name: string;
+  itemName: string;
+  itemPrice: number;
+  itemRealValue: number;
+  itemDescription: string;
+  totalPrice: number;
+  distance: number;
+  duration: number;
 }
 
 export interface SearchState {
-  searchSocket?: Socket<ServerToClientEvents, ClientToServerEvents>
-  nearByItems?: NearByItem[] | []
-  results: SearchResult[] | []
-  isFetching?: boolean
-  isSearching?: boolean
-  error?: string | null
-  curPos?: Position
-  address?: string | null
-  searchScene?: searchScene
-  search?: SearchItem
+  searchSocket?: Socket<ServerToClientEvents, ClientToServerEvents>;
+  nearByItems?: NearByItem[] | [];
+  results: SearchResult[] | [];
+  isFetching?: boolean;
+  isSearching?: boolean;
+  error?: string | null;
+  curPos?: Position;
+  address?: string | null;
+  searchScene?: searchScene;
+  search?: SearchItem;
 }
 
 export interface AddSearchAction {
-  type: SearchTypes.ADD_SEARCH
+  type: SearchTypes.ADD_SEARCH;
   payload: {
-    search: SearchItem
-  }
+    search: SearchItem;
+  };
 }
 
 export interface ClearSearchAction {
-  type: SearchTypes.CLEAR_SEARCH
+  type: SearchTypes.CLEAR_SEARCH;
 }
 export interface AddResultAction {
-  type: SearchTypes.ADD_RESULT
-  payload: { result: SearchResult }
+  type: SearchTypes.ADD_RESULT;
+  payload: {result: SearchResult};
 }
 
 export interface RemoveResultAction {
-  type: SearchTypes.REMOVE_RESULT
-  payload: { id: string }
+  type: SearchTypes.REMOVE_RESULT;
+  payload: {id: string};
 }
 
 export interface ClearResultsAction {
-  type: SearchTypes.CLEAR_RESULTS
+  type: SearchTypes.CLEAR_RESULTS;
 }
 export interface SetCurrentPositionAction {
-  type: SearchTypes.SET_CURRENT_POSITION
+  type: SearchTypes.SET_CURRENT_POSITION;
   payload: {
-    curPos: Position
-  }
+    curPos: Position;
+  };
 }
 
 export interface SearchRequestAction {
-  type: SearchTypes.SEARCH_REQUEST
+  type: SearchTypes.SEARCH_REQUEST;
 }
 
 export interface SearchCancelAction {
-  type: SearchTypes.SEARCH_CANCEL
+  type: SearchTypes.SEARCH_CANCEL;
 }
 
 export interface ToInputDetailsSceneAction {
-  type: SearchTypes.TO_INPUT_DETAILS_SCENE
+  type: SearchTypes.TO_INPUT_DETAILS_SCENE;
 }
 
 export interface ToInputLocationSceneAction {
-  type: SearchTypes.TO_INPUT_LOCATION_SCENE
+  type: SearchTypes.TO_INPUT_LOCATION_SCENE;
 }
 
 export interface ToResultsSceneAction {
-  type: SearchTypes.TO_RESULTS_SCENE
+  type: SearchTypes.TO_RESULTS_SCENE;
 }
 
 export interface SetAddressAction {
-  type: SearchTypes.SET_ADDRESS
+  type: SearchTypes.SET_ADDRESS;
   payload: {
-    address: string
-  }
+    address: string;
+  };
 }
 
 export interface AddNearByItemAction {
-  type: SearchTypes.ADD_NEAR_BY_ITEM
+  type: SearchTypes.ADD_NEAR_BY_ITEM;
   payload: {
-    nearByItem: NearByItem
-  }
+    nearByItem: NearByItem;
+  };
 }
 
 export interface RemoveNearByItemAction {
-  type: SearchTypes.REMOVE_NEAR_BY_ITEM
+  type: SearchTypes.REMOVE_NEAR_BY_ITEM;
   payload: {
-    id: string
-  }
+    id: string;
+  };
 }
 export interface ConnectSearchSocketAction {
-  type: SearchTypes.CONNECT_SEARCH_SOCKET
+  type: SearchTypes.CONNECT_SEARCH_SOCKET;
   payload: {
-    searchSocket: Socket<ServerToClientEvents, ClientToServerEvents>
-  }
+    searchSocket: Socket<ServerToClientEvents, ClientToServerEvents>;
+  };
 }
 
 export interface ClearNearByItemsAction {
-  type: SearchTypes.CLEAR_NEAR_BY_ITEMS
+  type: SearchTypes.CLEAR_NEAR_BY_ITEMS;
 }
 
 export interface ClearSocketAction {
-  type: SearchTypes.CLEAR_SOCKET
+  type: SearchTypes.CLEAR_SOCKET;
 }
 
 export type SearchAction =
@@ -164,7 +164,7 @@ export type SearchAction =
   | AddNearByItemAction
   | ConnectSearchSocketAction
   | ClearSocketAction
-  | ClearNearByItemsAction
+  | ClearNearByItemsAction;
 
 export enum searchAnimationVariantsName {
   HIDDEN = 'HIDDEN',
@@ -183,19 +183,19 @@ export enum searchScene {
 }
 
 export interface SearchAddress {
-  id: string
-  address: string
-  position: Position
+  id: string;
+  address: string;
+  position: Position;
 }
 
 export interface NearByItem extends SearchItem {
-  route_duration: number
-  distance: number
+  route_duration: number;
+  distance: number;
 }
 
 export interface ConfirmInputValues {
-  name?: string
-  price?: number
-  realValue?: number
-  description?: string
+  name?: string;
+  price?: number;
+  realValue?: number;
+  description?: string;
 }

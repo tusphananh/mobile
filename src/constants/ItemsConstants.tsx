@@ -10,10 +10,10 @@ export enum SortType {
 }
 
 export type ItemMaybe = {
-  __typename?: 'Item'
-  id: string
-  name: string
-  description: string
-  price: number
-  realValue: number
-}
+  __typename?: 'Item';
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  realValue: number;
+};
