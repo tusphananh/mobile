@@ -1,22 +1,22 @@
 /* eslint-disable react-native/no-inline-styles */
+import {
+  faBoxesStacked,
+  faClockRotateLeft,
+  faLocationDot,
+  faMessage,
+  faSatelliteDish,
+} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {View} from 'react-native';
-import Activities from './Activities/Activities';
 import {primaryColor} from '../globalStyles';
+import Activities from './Activities/Activities';
+import styles from './DashBoardStyles';
 import Items from './Items/Items';
 import Message from './Message/Message';
 import NearBy from './NearBy/NearBy';
 import Search from './Search/Search';
-import styles from './DashBoardStyles';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {
-  faLocationDot,
-  faClockRotateLeft,
-  faSatelliteDish,
-  faMessage,
-  faBoxesStacked,
-} from '@fortawesome/free-solid-svg-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -83,7 +83,7 @@ const DashBoard: React.FC<{}> = () => {
               <FontAwesomeIcon size={size} color={color} icon={faMessage} />
             ),
           }}
-          name="Message"
+          name="Messages"
           component={Message}
         />
         <Tab.Screen

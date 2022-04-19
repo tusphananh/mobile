@@ -1,13 +1,30 @@
-/* eslint-disable react-native/no-inline-styles */
+import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {Text, View} from 'react-native';
-import styles from './ItemsStyles';
+import AddItem from './AddItem';
+import ItemResults from './ItemResults';
 
-const Items: React.FC<{}> = ({}) => {
+const Stack = createStackNavigator();
+
+const Items: React.FC<{}> = () => {
   return (
-    <View style={styles.container}>
-      <Text>Test</Text>
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ItemResults"
+        component={ItemResults}
+        options={{
+          headerShown: false,
+          animationTypeForReplace: 'push',
+        }}
+      />
+      <Stack.Screen
+        name="AddItem"
+        component={AddItem}
+        options={{
+          headerShown: false,
+          animationTypeForReplace: 'push',
+        }}
+      />
+    </Stack.Navigator>
   );
 };
 

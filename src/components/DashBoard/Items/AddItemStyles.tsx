@@ -4,10 +4,16 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     width: '100%',
-    marginTop: 75,
-    justifyContent: 'center',
+    height: '100%',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    alignSelf: 'center',
+  },
+  backBtnContainer: {
+    width: '80%',
+    display: 'flex',
+  },
+  input: {
+    width: '80%',
   },
 });
 

@@ -11,8 +11,9 @@ import {
   AuthRegisterSuccessAction,
   AuthRequestLoginAction,
   AuthTypes,
+  DeleteItemAction,
   UserMaybe,
-} from '../constants/AuthConstant';
+} from '../constants/AuthConstants';
 import {ItemMaybe} from '../constants/ItemsConstants';
 import {UserResponse} from '../graphql-generated/graphql';
 
@@ -89,5 +90,12 @@ export const addItemsAction = (items: ItemMaybe[]): AddItemsAction => ({
   type: AuthTypes.ADD_ITEMS,
   payload: {
     items,
+  },
+});
+
+export const deleteItemAction = (item: ItemMaybe): DeleteItemAction => ({
+  type: AuthTypes.DELETE_ITEM,
+  payload: {
+    item,
   },
 });

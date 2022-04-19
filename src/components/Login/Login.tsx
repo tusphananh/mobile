@@ -6,7 +6,7 @@ import LogoIcon from '../../assets/icons/logo.svg';
 import NextIcon from '../../assets/icons/next-btn.svg';
 import {useAuthContext} from '../../contexts/authContext';
 import {isPasswordValid} from '../../utils/inputValidator';
-import globalStyles from '../globalStyles';
+import globalStyles, {placeHolderColor} from '../globalStyles';
 import styles from './LoginStyles';
 
 interface error {
@@ -96,14 +96,14 @@ const Login: FC<{
         onChangeText={text => setPhoneNumber(text)}
         placeholder="Phone"
         keyboardType="phone-pad"
-        placeholderTextColor="#9E9E9E"
+        placeholderTextColor={placeHolderColor}
         style={[globalStyles.textInput, {textAlign: 'center'}]}
       />
       <TextInput
         value={password}
         onChangeText={text => setPassword(text)}
         placeholder="Password"
-        placeholderTextColor="#9E9E9E"
+        placeholderTextColor={placeHolderColor}
         style={[globalStyles.textInput, {textAlign: 'center'}]}
         secureTextEntry={true}
       />

@@ -110,7 +110,7 @@ export const ActivitiesProvider: React.FC = ({children}) => {
         activitiesDispatch(addMessage(data.addMessage.data));
         const chatId = data.addMessage.data!.chatId.toString();
         const act = getActivityByChatId(chatId);
-        console.log(act);
+        // console.log(act);
         if (act) {
           const toUserId =
             authState.user!.id === act.renter.id

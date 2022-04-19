@@ -11,6 +11,7 @@ import {
   addItemAction,
   checkSessionFailure,
   checkSessionSuccess,
+  deleteItemAction,
   loginFailure,
   loginSuccess,
   registerFailure,
@@ -19,10 +20,11 @@ import {
   requestLogin,
   requestRegister,
 } from '../actions/authActions';
-import {AuthAction, AuthState} from '../constants/AuthConstant';
+import {AuthAction, AuthState} from '../constants/AuthConstants';
 import {
   useAddItemMutation,
   useCheckSessionLazyQuery,
+  useDeleteItemMutation,
   useLoginLazyQuery,
   useRegisterMutation,
 } from '../graphql-generated/graphql';
@@ -64,6 +66,7 @@ export const AuthContext = createContext<{
     realValue: number,
     description: string,
   ) => void;
+  deleteItem: (id: number) => void;
   authLogin: (phone: string, password: string) => Promise<void>;
 }>({
   authState: initialState,
@@ -71,6 +74,7 @@ export const AuthContext = createContext<{
   authRegsiter: async () => {},
   authLogin: async () => {},
   addItem: () => {},
+  deleteItem: () => {},
 });
 
 export const AuthProvider: FC = ({children}) => {
@@ -108,6 +112,14 @@ export const AuthProvider: FC = ({children}) => {
       data.addItem?.success &&
         data.addItem.data &&
         authDispatch(addItemAction(data.addItem.data));
+    },
+  });
+
+  const [deleteItemMutation] = useDeleteItemMutation({
+    onCompleted: data => {
+      data.deleteItem?.success &&
+        data.deleteItem.data &&
+        authDispatch(deleteItemAction(data.deleteItem.data));
     },
   });
   const [registerMutation] = useRegisterMutation({
@@ -157,6 +169,9 @@ export const AuthProvider: FC = ({children}) => {
         },
       });
   };
+  const deleteItem = (id: number) => {
+    id && deleteItemMutation({variables: {id}});
+  };
   const authLogin = async (phone: string, password: string) => {
     authDispatch(requestLogin());
 
@@ -177,6 +192,7 @@ export const AuthProvider: FC = ({children}) => {
     authLogin,
     authRegsiter,
     addItem,
+    deleteItem,
   };
 
   return (

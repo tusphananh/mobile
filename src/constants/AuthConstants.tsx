@@ -13,6 +13,7 @@ export enum AuthTypes {
   AUTH_CHECK_SESSION_FAILURE = 'AUTH_CHECK_SESSION_FAILURE',
   ADD_ITEM = 'ADD_ITEM',
   ADD_ITEMS = 'ADD_ITEMS',
+  DELETE_ITEM = 'DELETE_ITEM',
 }
 
 export type UserMaybe = {
@@ -107,6 +108,12 @@ export interface AddItemsAction {
     items: ItemMaybe[] | [];
   };
 }
+export interface DeleteItemAction {
+  type: AuthTypes.DELETE_ITEM;
+  payload: {
+    item: ItemMaybe;
+  };
+}
 export type AuthAction =
   | AuthLoginSuccessAction
   | AuthLoginFailureAction
@@ -118,4 +125,5 @@ export type AuthAction =
   | AuthCheckSessionFailureAction
   | AuthCheckSessionRequestsAction
   | AddItemAction
-  | AddItemsAction;
+  | AddItemsAction
+  | DeleteItemAction;

@@ -2,16 +2,22 @@
 import {faBoxesPacking, faHandshake} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import Collapsible from 'react-native-collapsible';
 import {
   ActivitiesStatus,
   ActivityMaybe,
 } from '../../../constants/ActivitiesConstants';
 import {useActivitiesContext} from '../../../contexts/activitiesContext';
 import {getReverseActivityStatus} from '../../../utils/formatter';
-import globalStyles, {primaryColor} from '../../globalStyles';
+import CollapsibleCard from '../../CollapsibleCard/CollapsibleCard';
+import globalStyles, {
+  failedColor,
+  pendingColor,
+  primaryColor,
+  successColor,
+  txtColor,
+} from '../../globalStyles';
 import styles from './ActivitiesStyles';
 const Tab = createBottomTabNavigator();
 
@@ -62,7 +68,7 @@ const ActivitiesTab: React.FC<{
 }> = ({activity}) => {
   return (
     <View style={[styles.container]}>
-      <ScrollView style={{width: '100%', height: '100%'}}>
+      <ScrollView style={{width: '90%'}}>
         {activity.map(item => {
           return <ActivityCollapsible key={item.id} activity={item} />;
         })}
@@ -74,77 +80,35 @@ const ActivitiesTab: React.FC<{
 const ActivityCollapsible: React.FC<{
   activity: ActivityMaybe;
 }> = ({activity}) => {
-  const [isCollapsed, setIsCollapsed] = React.useState(true);
-  const [colorStyle, setColorStyle] = React.useState(styles.txtPendingColor);
-
-  useEffect(() => {
+  const getTxtColor = () => {
     if (activity.status === ActivitiesStatus.PENDING) {
-      setColorStyle(styles.txtPendingColor);
+      return pendingColor;
     } else if (activity.status === ActivitiesStatus.SUCCESS) {
-      setColorStyle(styles.txtSuccessColor);
+      return successColor;
     } else if (activity.status === ActivitiesStatus.FAILED) {
-      setColorStyle(styles.txtFailedColor);
+      return failedColor;
+    } else {
+      return txtColor;
     }
-  }, [activity]);
+  };
+  const [colorStyle] = React.useState(getTxtColor());
+  const [header] = React.useState([{title: 'Name', content: activity.name}]);
+  const [content] = React.useState([
+    {title: 'Description', content: activity.itemDescription},
+    {title: 'Duration', content: activity.duration + ' h'},
+    {title: 'Distance', content: activity.distance + ' km'},
+    {title: 'Total Price', content: activity.totalPrice + '$'},
+    {title: 'Price', content: activity.itemPrice + ' $/h'},
+    {title: 'Item Real Value', content: activity.itemRealValue + ' $'},
+    {title: 'Status', content: getReverseActivityStatus(activity.status)},
+  ]);
+
   return (
-    <TouchableOpacity
-      style={[globalStyles.flexColumn, styles.collapsContainer]}
-      key={activity.id}
-      onPress={() => setIsCollapsed(!isCollapsed)}>
-      <View style={[globalStyles.collapsItem]}>
-        <Text style={[colorStyle, styles.title]}>Name</Text>
-        <Text style={[colorStyle, styles.text]}>
-          {activity?.itemName || 'No Name'}
-        </Text>
-      </View>
-      <Collapsible collapsed={isCollapsed}>
-        <View style={[globalStyles.collapsItem]}>
-          <Text style={[colorStyle, styles.title]}>Description</Text>
-          <Text style={[colorStyle, styles.text]}>
-            {activity?.itemDescription || 'No Description'}
-          </Text>
-        </View>
-        <View style={[globalStyles.collapsItem]}>
-          <Text style={[colorStyle, styles.title]}>Duration</Text>
-          <Text style={[colorStyle, styles.text]}>
-            {activity?.duration + ' h' || 0}
-          </Text>
-        </View>
-        <View style={[globalStyles.collapsItem]}>
-          <Text style={[colorStyle, styles.title]}>Distance</Text>
-          <Text style={[colorStyle, styles.text]}>
-            {activity?.distance + ' km' || 0}
-          </Text>
-        </View>
-        <View style={[globalStyles.collapsItem]}>
-          <Text style={[colorStyle, styles.title]}>Total Price</Text>
-          <Text style={[colorStyle, styles.text]}>
-            {activity?.totalPrice + ' $' || 0}
-          </Text>
-        </View>
-        <View style={[globalStyles.collapsItem]}>
-          <Text style={[colorStyle, styles.title]}>Item Price</Text>
-          <Text style={[colorStyle, styles.text]}>
-            {activity?.itemPrice + ' $/h' || 0}
-          </Text>
-        </View>
-        <View style={[globalStyles.collapsItem]}>
-          <Text style={[colorStyle, styles.title]}>Item Real Value</Text>
-          <Text style={[colorStyle, styles.text]}>
-            {activity?.itemRealValue + ' $' || 0}
-          </Text>
-        </View>
-        <View style={[globalStyles.collapsItem]}>
-          <Text style={[colorStyle, styles.title]}>Status</Text>
-          <Text style={[colorStyle, styles.text]}>
-            {getReverseActivityStatus(activity?.status)}
-          </Text>
-        </View>
-        <TouchableOpacity style={styles.cancelBtn}>
-          <Text style={styles.cancelTxt}>Cancel</Text>
-        </TouchableOpacity>
-      </Collapsible>
-    </TouchableOpacity>
+    <CollapsibleCard color={colorStyle} header={header} content={content}>
+      <TouchableOpacity style={globalStyles.confirmBtn}>
+        <Text style={globalStyles.cancelTxt}>Cancel</Text>
+      </TouchableOpacity>
+    </CollapsibleCard>
   );
 };
 
