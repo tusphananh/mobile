@@ -32,7 +32,7 @@ export const getReverseActivityStatus = (status?: string) => {
 };
 
 /**
- * Convert 2022-01-09T01:54:36.707Z
+ * Convert 2022-01-09T01:54:36.707Z to 09/01/2022
  */
 
 export const formatDate = (date: string) => {

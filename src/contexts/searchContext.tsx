@@ -62,7 +62,6 @@ export const SearchProvider: React.FC = ({children}) => {
   const sendSearchCancel = () => {
     if (searchState.search) {
       searchState.searchSocket?.emit(SocketChannel.CANCEL, searchState.search);
-      console.log('sendSearchCancel');
       searchDispatch(clearSearch());
     }
   };

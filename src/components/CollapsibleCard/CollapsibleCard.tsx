@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleProp, Text, TextStyle, TouchableOpacity, View} from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import {CollapsibleCardContent} from '../../constants/CollapsibleCard';
 import globalStyles, {txtColor} from '../globalStyles';
@@ -11,14 +11,19 @@ const CollapsibleCard: React.FC<{
   color?: string;
   header: CollapsibleCardContent[];
   content: CollapsibleCardContent[];
-}> = ({children, color, header, content}) => {
+  style?: StyleProp<TextStyle>[] | StyleProp<TextStyle>;
+}> = ({children, color, header, content, style}) => {
   const [isCollapsed, setIsCollapsed] = React.useState(true);
   const [colorStyle] = React.useState(
     color ? {color: color} : {color: txtColor},
   );
   return (
     <TouchableOpacity
-      style={[globalStyles.flexColumn, styles.collapsContainer]}
+      style={[
+        globalStyles.flexColumn,
+        styles.collapsContainer,
+        Array.isArray(style) ? [...style] : style,
+      ]}
       onPress={() => setIsCollapsed(!isCollapsed)}>
       {header.map((item, index) => (
         <View key={item.title + index} style={[globalStyles.collapsItem]}>

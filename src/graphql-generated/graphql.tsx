@@ -1,7 +1,9 @@
 import {gql} from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]};
+export type Exact<T extends {[key: string]: unknown}> = {
+  [K in keyof T]: T[K];
+};
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]?: Maybe<T[SubKey]>;
 };
@@ -130,13 +132,16 @@ export type MessageResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   addActivity?: Maybe<ActivityResponse>;
+  addBalance?: Maybe<UserResponse>;
   addItem?: Maybe<ItemResponse>;
   addMessage?: Maybe<MessageResponse>;
   deleteItem?: Maybe<ItemResponse>;
   failActivity?: Maybe<ActivityResponse>;
+  login?: Maybe<UserResponse>;
+  logout?: Maybe<UserResponse>;
   register?: Maybe<UserResponse>;
+  subtractBalance?: Maybe<UserResponse>;
   successActivity?: Maybe<ActivityResponse>;
-  updateBalance?: Maybe<UserResponse>;
   updateItem?: Maybe<ItemResponse>;
   uploadIdImage?: Maybe<UserResponse>;
 };
@@ -153,6 +158,10 @@ export type MutationAddActivityArgs = {
   providerId: Scalars['String'];
   renterId: Scalars['String'];
   totalPrice: Scalars['Float'];
+};
+
+export type MutationAddBalanceArgs = {
+  amount: Scalars['Float'];
 };
 
 export type MutationAddItemArgs = {
@@ -176,6 +185,11 @@ export type MutationFailActivityArgs = {
   id: Scalars['String'];
 };
 
+export type MutationLoginArgs = {
+  password: Scalars['String'];
+  phone: Scalars['String'];
+};
+
 export type MutationRegisterArgs = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
@@ -183,12 +197,12 @@ export type MutationRegisterArgs = {
   phone: Scalars['String'];
 };
 
-export type MutationSuccessActivityArgs = {
-  id: Scalars['String'];
+export type MutationSubtractBalanceArgs = {
+  amount: Scalars['Float'];
 };
 
-export type MutationUpdateBalanceArgs = {
-  amount: Scalars['Float'];
+export type MutationSuccessActivityArgs = {
+  id: Scalars['String'];
 };
 
 export type MutationUpdateItemArgs = {
@@ -212,18 +226,11 @@ export type Query = {
   getItemsByName?: Maybe<ItemsResponse>;
   getProvideActivities?: Maybe<ActivitiesResponse>;
   getRentActivities?: Maybe<ActivitiesResponse>;
-  login?: Maybe<UserResponse>;
-  logout?: Maybe<UserResponse>;
   refreshSession?: Maybe<UserResponse>;
 };
 
 export type QueryGetItemsByNameArgs = {
   name: Scalars['String'];
-};
-
-export type QueryLoginArgs = {
-  password: Scalars['String'];
-  phone: Scalars['String'];
 };
 
 export type User = {
@@ -588,6 +595,74 @@ export type AddMessageMutation = {
   }>;
 };
 
+export type AddBalanceMutationVariables = Exact<{
+  amount: Scalars['Float'];
+}>;
+
+export type AddBalanceMutation = {
+  __typename?: 'Mutation';
+  addBalance?: Maybe<{
+    __typename?: 'UserResponse';
+    code: number;
+    success: boolean;
+    errors?: Maybe<
+      Array<{__typename?: 'ErrorResponse'; field: string; message: string}>
+    >;
+    data?: Maybe<{
+      __typename?: 'User';
+      id: string;
+      firstName: string;
+      lastName: string;
+      phone: string;
+      balance: number;
+      createdAt: any;
+      updatedAt: any;
+      items: Array<{
+        __typename?: 'Item';
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        realValue: number;
+      }>;
+    }>;
+  }>;
+};
+
+export type SubtractBalanceMutationVariables = Exact<{
+  amount: Scalars['Float'];
+}>;
+
+export type SubtractBalanceMutation = {
+  __typename?: 'Mutation';
+  subtractBalance?: Maybe<{
+    __typename?: 'UserResponse';
+    code: number;
+    success: boolean;
+    errors?: Maybe<
+      Array<{__typename?: 'ErrorResponse'; field: string; message: string}>
+    >;
+    data?: Maybe<{
+      __typename?: 'User';
+      id: string;
+      firstName: string;
+      lastName: string;
+      phone: string;
+      balance: number;
+      createdAt: any;
+      updatedAt: any;
+      items: Array<{
+        __typename?: 'Item';
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        realValue: number;
+      }>;
+    }>;
+  }>;
+};
+
 export type AddItemMutationVariables = Exact<{
   name: Scalars['String'];
   description: Scalars['String'];
@@ -663,6 +738,73 @@ export type DeleteItemMutation = {
       description: string;
       price: number;
       realValue: number;
+    }>;
+  }>;
+};
+
+export type LoginMutationVariables = Exact<{
+  phone: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+export type LoginMutation = {
+  __typename?: 'Mutation';
+  login?: Maybe<{
+    __typename?: 'UserResponse';
+    code: number;
+    success: boolean;
+    errors?: Maybe<
+      Array<{__typename?: 'ErrorResponse'; field: string; message: string}>
+    >;
+    data?: Maybe<{
+      __typename?: 'User';
+      id: string;
+      firstName: string;
+      lastName: string;
+      phone: string;
+      balance: number;
+      createdAt: any;
+      updatedAt: any;
+      items: Array<{
+        __typename?: 'Item';
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        realValue: number;
+      }>;
+    }>;
+  }>;
+};
+
+export type LogoutMutationVariables = Exact<{[key: string]: never}>;
+
+export type LogoutMutation = {
+  __typename?: 'Mutation';
+  logout?: Maybe<{
+    __typename?: 'UserResponse';
+    code: number;
+    success: boolean;
+    errors?: Maybe<
+      Array<{__typename?: 'ErrorResponse'; field: string; message: string}>
+    >;
+    data?: Maybe<{
+      __typename?: 'User';
+      id: string;
+      firstName: string;
+      lastName: string;
+      phone: string;
+      balance: number;
+      createdAt: any;
+      updatedAt: any;
+      items: Array<{
+        __typename?: 'Item';
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        realValue: number;
+      }>;
     }>;
   }>;
 };
@@ -802,7 +944,9 @@ export type GetRentActivitiesQuery = {
   }>;
 };
 
-export type GetProvideActivitiesQueryVariables = Exact<{[key: string]: never}>;
+export type GetProvideActivitiesQueryVariables = Exact<{
+  [key: string]: never;
+}>;
 
 export type GetProvideActivitiesQuery = {
   __typename?: 'Query';
@@ -876,41 +1020,10 @@ export type GetImageIdQuery = {
     errors?: Maybe<
       Array<{__typename?: 'ErrorResponse'; field: string; message: string}>
     >;
-    data?: Maybe<{__typename?: 'ImageID'; frontSide: string; backSide: string}>;
-  }>;
-};
-
-export type LoginQueryVariables = Exact<{
-  phone: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-export type LoginQuery = {
-  __typename?: 'Query';
-  login?: Maybe<{
-    __typename?: 'UserResponse';
-    code: number;
-    success: boolean;
-    errors?: Maybe<
-      Array<{__typename?: 'ErrorResponse'; field: string; message: string}>
-    >;
     data?: Maybe<{
-      __typename?: 'User';
-      id: string;
-      firstName: string;
-      lastName: string;
-      phone: string;
-      balance: number;
-      createdAt: any;
-      updatedAt: any;
-      items: Array<{
-        __typename?: 'Item';
-        id: string;
-        name: string;
-        description: string;
-        price: number;
-        realValue: number;
-      }>;
+      __typename?: 'ImageID';
+      frontSide: string;
+      backSide: string;
     }>;
   }>;
 };
@@ -1338,6 +1451,124 @@ export type AddMessageMutationOptions = Apollo.BaseMutationOptions<
   AddMessageMutation,
   AddMessageMutationVariables
 >;
+export const AddBalanceDocument = gql`
+  mutation addBalance($amount: Float!) {
+    addBalance(amount: $amount) {
+      code
+      success
+      errors {
+        ...ErrosResponseFragment
+      }
+      data {
+        ...UserResponseFragment
+      }
+    }
+  }
+  ${ErrosResponseFragmentFragmentDoc}
+  ${UserResponseFragmentFragmentDoc}
+`;
+export type AddBalanceMutationFn = Apollo.MutationFunction<
+  AddBalanceMutation,
+  AddBalanceMutationVariables
+>;
+
+/**
+ * __useAddBalanceMutation__
+ *
+ * To run a mutation, you first call `useAddBalanceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddBalanceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addBalanceMutation, { data, loading, error }] = useAddBalanceMutation({
+ *   variables: {
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useAddBalanceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddBalanceMutation,
+    AddBalanceMutationVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions};
+  return Apollo.useMutation<AddBalanceMutation, AddBalanceMutationVariables>(
+    AddBalanceDocument,
+    options,
+  );
+}
+export type AddBalanceMutationHookResult = ReturnType<
+  typeof useAddBalanceMutation
+>;
+export type AddBalanceMutationResult =
+  Apollo.MutationResult<AddBalanceMutation>;
+export type AddBalanceMutationOptions = Apollo.BaseMutationOptions<
+  AddBalanceMutation,
+  AddBalanceMutationVariables
+>;
+export const SubtractBalanceDocument = gql`
+  mutation subtractBalance($amount: Float!) {
+    subtractBalance(amount: $amount) {
+      code
+      success
+      errors {
+        ...ErrosResponseFragment
+      }
+      data {
+        ...UserResponseFragment
+      }
+    }
+  }
+  ${ErrosResponseFragmentFragmentDoc}
+  ${UserResponseFragmentFragmentDoc}
+`;
+export type SubtractBalanceMutationFn = Apollo.MutationFunction<
+  SubtractBalanceMutation,
+  SubtractBalanceMutationVariables
+>;
+
+/**
+ * __useSubtractBalanceMutation__
+ *
+ * To run a mutation, you first call `useSubtractBalanceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubtractBalanceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [subtractBalanceMutation, { data, loading, error }] = useSubtractBalanceMutation({
+ *   variables: {
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useSubtractBalanceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SubtractBalanceMutation,
+    SubtractBalanceMutationVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions};
+  return Apollo.useMutation<
+    SubtractBalanceMutation,
+    SubtractBalanceMutationVariables
+  >(SubtractBalanceDocument, options);
+}
+export type SubtractBalanceMutationHookResult = ReturnType<
+  typeof useSubtractBalanceMutation
+>;
+export type SubtractBalanceMutationResult =
+  Apollo.MutationResult<SubtractBalanceMutation>;
+export type SubtractBalanceMutationOptions = Apollo.BaseMutationOptions<
+  SubtractBalanceMutation,
+  SubtractBalanceMutationVariables
+>;
 export const AddItemDocument = gql`
   mutation addItem(
     $name: String!
@@ -1540,6 +1771,118 @@ export type DeleteItemMutationResult =
 export type DeleteItemMutationOptions = Apollo.BaseMutationOptions<
   DeleteItemMutation,
   DeleteItemMutationVariables
+>;
+export const LoginDocument = gql`
+  mutation Login($phone: String!, $password: String!) {
+    login(phone: $phone, password: $password) {
+      code
+      success
+      errors {
+        ...ErrosResponseFragment
+      }
+      data {
+        ...UserResponseFragment
+      }
+    }
+  }
+  ${ErrosResponseFragmentFragmentDoc}
+  ${UserResponseFragmentFragmentDoc}
+`;
+export type LoginMutationFn = Apollo.MutationFunction<
+  LoginMutation,
+  LoginMutationVariables
+>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      phone: // value for 'phone'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useLoginMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LoginMutation,
+    LoginMutationVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions};
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
+    LoginDocument,
+    options,
+  );
+}
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
+>;
+export const LogoutDocument = gql`
+  mutation Logout {
+    logout {
+      code
+      success
+      errors {
+        ...ErrosResponseFragment
+      }
+      data {
+        ...UserResponseFragment
+      }
+    }
+  }
+  ${ErrosResponseFragmentFragmentDoc}
+  ${UserResponseFragmentFragmentDoc}
+`;
+export type LogoutMutationFn = Apollo.MutationFunction<
+  LogoutMutation,
+  LogoutMutationVariables
+>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LogoutMutation,
+    LogoutMutationVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions};
+  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
+    LogoutDocument,
+    options,
+  );
+}
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<
+  LogoutMutation,
+  LogoutMutationVariables
 >;
 export const RegisterDocument = gql`
   mutation Register(
@@ -1865,64 +2208,6 @@ export type GetImageIdLazyQueryHookResult = ReturnType<
 export type GetImageIdQueryResult = Apollo.QueryResult<
   GetImageIdQuery,
   GetImageIdQueryVariables
->;
-export const LoginDocument = gql`
-  query Login($phone: String!, $password: String!) {
-    login(phone: $phone, password: $password) {
-      code
-      success
-      errors {
-        ...ErrosResponseFragment
-      }
-      data {
-        ...UserResponseFragment
-      }
-    }
-  }
-  ${ErrosResponseFragmentFragmentDoc}
-  ${UserResponseFragmentFragmentDoc}
-`;
-
-/**
- * __useLoginQuery__
- *
- * To run a query within a React component, call `useLoginQuery` and pass it any options that fit your needs.
- * When your component renders, `useLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLoginQuery({
- *   variables: {
- *      phone: // value for 'phone'
- *      password: // value for 'password'
- *   },
- * });
- */
-export function useLoginQuery(
-  baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>,
-) {
-  const options = {...defaultOptions, ...baseOptions};
-  return Apollo.useQuery<LoginQuery, LoginQueryVariables>(
-    LoginDocument,
-    options,
-  );
-}
-export function useLoginLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>,
-) {
-  const options = {...defaultOptions, ...baseOptions};
-  return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(
-    LoginDocument,
-    options,
-  );
-}
-export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
-export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
-export type LoginQueryResult = Apollo.QueryResult<
-  LoginQuery,
-  LoginQueryVariables
 >;
 export const CheckSessionDocument = gql`
   query CheckSession {

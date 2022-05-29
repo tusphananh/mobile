@@ -11,18 +11,10 @@
 import {ApolloProvider} from '@apollo/client';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {
-  ImageBackground,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  useColorScheme,
-  View,
-  Text,
-} from 'react-native';
+import {StatusBar, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import Background from './assets/images/background.jpg';
 import Auth from './components/Auth/Auth';
+import Background from './components/Background/Background';
 import {ActivitiesProvider} from './contexts/activitiesContext';
 import {AuthProvider} from './contexts/authContext';
 import {SearchProvider} from './contexts/searchContext';
@@ -45,19 +37,11 @@ const App: React.FC<{props: any}> = ({props}) => {
         <AuthProvider>
           <SearchProvider>
             <ActivitiesProvider>
-              <ImageBackground
-                style={backgroundStyles.background}
-                source={Background}>
-                <SafeAreaView
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  style={{
-                    flex: 1,
-                  }}>
-                  <NavigationContainer theme={navTheme}>
-                    <Auth />
-                  </NavigationContainer>
-                </SafeAreaView>
-              </ImageBackground>
+              <Background>
+                <NavigationContainer theme={navTheme}>
+                  <Auth />
+                </NavigationContainer>
+              </Background>
             </ActivitiesProvider>
           </SearchProvider>
         </AuthProvider>
@@ -65,13 +49,6 @@ const App: React.FC<{props: any}> = ({props}) => {
     </View>
   );
 };
-
-const backgroundStyles = StyleSheet.create({
-  background: {
-    width: '100%',
-    height: '100%',
-  },
-});
 
 const navTheme = {
   ...DefaultTheme,

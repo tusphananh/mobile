@@ -14,6 +14,7 @@ import {
   deleteItemAction,
   loginFailure,
   loginSuccess,
+  logoutAction,
   registerFailure,
   registerSuccess,
   requestCheckSession,
@@ -25,7 +26,8 @@ import {
   useAddItemMutation,
   useCheckSessionLazyQuery,
   useDeleteItemMutation,
-  useLoginLazyQuery,
+  useLoginMutation,
+  useLogoutMutation,
   useRegisterMutation,
 } from '../graphql-generated/graphql';
 import AuthReducer from '../reducers/authReducer';
@@ -68,6 +70,7 @@ export const AuthContext = createContext<{
   ) => void;
   deleteItem: (id: number) => void;
   authLogin: (phone: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }>({
   authState: initialState,
   authDispatch: () => undefined,
@@ -75,6 +78,7 @@ export const AuthContext = createContext<{
   authLogin: async () => {},
   addItem: () => {},
   deleteItem: () => {},
+  logout: async () => {},
 });
 
 export const AuthProvider: FC = ({children}) => {
@@ -94,9 +98,8 @@ export const AuthProvider: FC = ({children}) => {
       authDispatch(checkSessionFailure());
     },
   });
-  const [loginLazyQuery] = useLoginLazyQuery({
+  const [loginLazyQuery, {client}] = useLoginMutation({
     onCompleted: data => {
-      console.log('somedata', data);
       if (data.login) {
         if (data.login.success) {
           authDispatch(loginSuccess(data.login.data!));
@@ -133,6 +136,20 @@ export const AuthProvider: FC = ({children}) => {
       }
     },
   });
+
+  const [logoutQuery] = useLogoutMutation({
+    onCompleted: async () => {
+      await client.clearStore();
+      authDispatch(logoutAction());
+    },
+    onError: error => {
+      console.log(error);
+    },
+  });
+
+  const logout = async () => {
+    await logoutQuery();
+  };
 
   const authRegsiter = async (
     phone: string,
@@ -193,6 +210,7 @@ export const AuthProvider: FC = ({children}) => {
     authRegsiter,
     addItem,
     deleteItem,
+    logout,
   };
 
   return (

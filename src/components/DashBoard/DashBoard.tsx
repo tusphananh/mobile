@@ -10,6 +10,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {View} from 'react-native';
+import CustomTabBar from '../CustomTabBar/CustomTabBar';
 import {primaryColor} from '../globalStyles';
 import Activities from './Activities/Activities';
 import styles from './DashBoardStyles';
@@ -25,18 +26,11 @@ const DashBoard: React.FC<{}> = () => {
     <View style={styles.container}>
       <Tab.Navigator
         // Hide title
+        tabBar={props => <CustomTabBar props={props} />}
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: 'rgba(10, 10, 10, 0.3)',
-            position: 'absolute',
-            left: 20,
-            right: 20,
-            bottom: 20,
+            backgroundColor: 'transparent',
             borderTopWidth: 0,
-            borderRadius: 20,
-            paddingBottom: 15,
-            paddingTop: 5,
-            height: 72,
           },
           headerShown: false,
           tabBarActiveTintColor: primaryColor,

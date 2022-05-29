@@ -71,6 +71,7 @@ export const AuthReducer = (
         isFetching: false,
         isAuthenticated: false,
         errors: action.payload?.errors!,
+        user: null,
       };
     case AuthTypes.ADD_ITEM:
       return {
@@ -100,6 +101,14 @@ export const AuthReducer = (
             item => item.id !== action.payload.item.id,
           ),
         },
+      };
+    case AuthTypes.LOGOUT:
+      return {
+        ...state,
+        isFetching: true,
+        isAuthenticated: false,
+        user: null,
+        errors: [],
       };
 
     default:

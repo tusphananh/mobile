@@ -1,14 +1,22 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {FC, useEffect} from 'react';
-import {Text, TextInput, View} from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import LogoIcon from '../../assets/icons/logo.svg';
 import NextIcon from '../../assets/icons/next-btn.svg';
 import {useAuthContext} from '../../contexts/authContext';
 import {isPasswordValid} from '../../utils/inputValidator';
+import Background from '../Background/Background';
 import globalStyles, {placeHolderColor} from '../globalStyles';
 import styles from './LoginStyles';
-
 interface error {
   isError: boolean;
   message: string;
@@ -57,10 +65,6 @@ const Login: FC<{
   useEffect(() => {
     if (authState.isAuthenticated) {
       setError(initialErrors);
-      /**
-       * TODO: redirect to home page
-       */
-      // route.push('/');
     }
 
     if (
@@ -76,54 +80,64 @@ const Login: FC<{
   }, [authState]);
 
   return (
-    <View style={styles.container}>
-      <LogoIcon width={80} height={80} />
+    <Background>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={globalStyles.flex1}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <LogoIcon width={80} height={80} />
+            <Text style={[globalStyles.h1, globalStyles.bold]}>Welcome !</Text>
+            <Text style={globalStyles.subtitle}>
+              Sign in to start
+              <Text style={globalStyles.bold}>RentEverything</Text>
+            </Text>
+            <View
+              style={[
+                globalStyles.divider,
+                {
+                  width: '30%',
+                },
+              ]}
+            />
+            <TextInput
+              value={phoneNumber}
+              onChangeText={text => setPhoneNumber(text)}
+              placeholder="Phone"
+              keyboardType="phone-pad"
+              placeholderTextColor={placeHolderColor}
+              style={[globalStyles.textInput, {textAlign: 'center'}]}
+            />
+            <TextInput
+              value={password}
+              onChangeText={text => setPassword(text)}
+              placeholder="Password"
+              placeholderTextColor={placeHolderColor}
+              style={[globalStyles.textInput, {textAlign: 'center'}]}
+              secureTextEntry={true}
+            />
+            {error.isError && (
+              <Text style={globalStyles.error}>{error.message}</Text>
+            )}
+            <Text
+              onPress={() => {
+                navigation.navigate('Register');
+              }}
+              style={globalStyles.subtitle}>
+              Don't have an account{' '}
+              <Text style={globalStyles.bold}>Register now</Text>
+            </Text>
 
-      <Text style={[globalStyles.title, globalStyles.bold]}>Welcome !</Text>
-      <Text style={globalStyles.subtitle}>
-        Sign in to start <Text style={globalStyles.bold}>RentEverything</Text>
-      </Text>
-      <View
-        style={[
-          globalStyles.divider,
-          {
-            width: '30%',
-          },
-        ]}
-      />
-      <TextInput
-        value={phoneNumber}
-        onChangeText={text => setPhoneNumber(text)}
-        placeholder="Phone"
-        keyboardType="phone-pad"
-        placeholderTextColor={placeHolderColor}
-        style={[globalStyles.textInput, {textAlign: 'center'}]}
-      />
-      <TextInput
-        value={password}
-        onChangeText={text => setPassword(text)}
-        placeholder="Password"
-        placeholderTextColor={placeHolderColor}
-        style={[globalStyles.textInput, {textAlign: 'center'}]}
-        secureTextEntry={true}
-      />
-      {error.isError && <Text style={globalStyles.error}>{error.message}</Text>}
-      <Text
-        onPress={() => {
-          navigation.navigate('Register');
-        }}
-        style={globalStyles.subtitle}>
-        Don't have an account{' '}
-        <Text style={globalStyles.bold}>Register now</Text>
-      </Text>
-
-      <TouchableOpacity
-        onPress={() => {
-          login();
-        }}>
-        <NextIcon style={{marginTop: 20}} width={116} />
-      </TouchableOpacity>
-    </View>
+            <TouchableOpacity
+              onPress={() => {
+                login();
+              }}>
+              <NextIcon style={{marginTop: 20}} width={116} />
+            </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </Background>
   );
 };
 

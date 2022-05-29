@@ -14,6 +14,7 @@ export enum AuthTypes {
   ADD_ITEM = 'ADD_ITEM',
   ADD_ITEMS = 'ADD_ITEMS',
   DELETE_ITEM = 'DELETE_ITEM',
+  LOGOUT = 'LOGOUT',
 }
 
 export type UserMaybe = {
@@ -114,6 +115,10 @@ export interface DeleteItemAction {
     item: ItemMaybe;
   };
 }
+
+export interface LogoutAction {
+  type: AuthTypes.LOGOUT;
+}
 export type AuthAction =
   | AuthLoginSuccessAction
   | AuthLoginFailureAction
@@ -126,4 +131,5 @@ export type AuthAction =
   | AuthCheckSessionRequestsAction
   | AddItemAction
   | AddItemsAction
-  | DeleteItemAction;
+  | DeleteItemAction
+  | LogoutAction;

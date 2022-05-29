@@ -12,6 +12,7 @@ import {
   AuthRequestLoginAction,
   AuthTypes,
   DeleteItemAction,
+  LogoutAction,
   UserMaybe,
 } from '../constants/AuthConstants';
 import {ItemMaybe} from '../constants/ItemsConstants';
@@ -98,4 +99,8 @@ export const deleteItemAction = (item: ItemMaybe): DeleteItemAction => ({
   payload: {
     item,
   },
+});
+
+export const logoutAction = (): LogoutAction => ({
+  type: AuthTypes.LOGOUT,
 });
