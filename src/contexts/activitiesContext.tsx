@@ -6,6 +6,7 @@ import {
   addRentActivities,
   addRentActivity,
   setChatSocket,
+  updateActivity,
 } from '../actions/activitiesActions';
 import {
   ActivitiesAction,
@@ -18,8 +19,11 @@ import {SocketChannel} from '../constants/SocketConstants';
 import {
   useAddActivityMutation,
   useAddMessageMutation,
+  useFailActivityMutation,
   useGetProvideActivitiesLazyQuery,
   useGetRentActivitiesLazyQuery,
+  useInProgressActivityMutation,
+  useSuccessActivityMutation,
 } from '../graphql-generated/graphql';
 import activitiesReducer from '../reducers/activitiesReducer';
 import {useAuthContext} from './authContext';
@@ -37,11 +41,17 @@ export const ActivitiesContext = React.createContext<{
   activitiesDispatch: React.Dispatch<ActivitiesAction>;
   sendMessage: (id: string, chatId: number, text: string) => void;
   approveResult: (result: SearchResult) => void;
+  cancel: (id: string) => Promise<void>;
+  success: (id: string) => Promise<void>;
+  inProgress: (id: string) => Promise<void>;
 }>({
   activitiesState: initialState,
   activitiesDispatch: () => undefined,
   sendMessage: () => undefined,
   approveResult: () => {},
+  cancel: async () => {},
+  success: async () => {},
+  inProgress: async () => {},
 });
 
 export const ActivitiesProvider: React.FC = ({children}) => {
@@ -124,6 +134,29 @@ export const ActivitiesProvider: React.FC = ({children}) => {
       }
     },
   });
+
+  const [failActivities] = useFailActivityMutation({
+    onCompleted: data => {
+      if (data.failActivity?.success) {
+        activitiesDispatch(updateActivity(data.failActivity.data));
+      }
+    },
+  });
+  const [successActivities] = useSuccessActivityMutation({
+    onCompleted: data => {
+      if (data.successActivity?.success) {
+        activitiesDispatch(updateActivity(data.successActivity.data));
+      }
+    },
+  });
+  const [inProgressActivities] = useInProgressActivityMutation({
+    onCompleted: data => {
+      if (data.inProgressActivity?.success) {
+        activitiesDispatch(updateActivity(data.inProgressActivity.data));
+      }
+    },
+  });
+
   const approveResult = async (result: SearchResult) => {
     authState.user &&
       (await addActivity({
@@ -141,6 +174,28 @@ export const ActivitiesProvider: React.FC = ({children}) => {
           totalPrice: result.totalPrice,
         },
       }));
+  };
+
+  const cancel = async (id: string) => {
+    await failActivities({
+      variables: {
+        id,
+      },
+    });
+  };
+  const success = async (id: string) => {
+    await successActivities({
+      variables: {
+        id,
+      },
+    });
+  };
+  const inProgress = async (id: string) => {
+    await inProgressActivities({
+      variables: {
+        id,
+      },
+    });
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -192,6 +247,9 @@ export const ActivitiesProvider: React.FC = ({children}) => {
     activitiesDispatch,
     sendMessage,
     approveResult,
+    inProgress,
+    cancel,
+    success,
   };
   return (
     <ActivitiesContext.Provider value={values}>

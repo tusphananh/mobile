@@ -26,8 +26,12 @@ export const getReverseActivityStatus = (status?: string) => {
       return ActivitiesStatus.SUCCESS;
     case ActivitiesStatus.FAILED:
       return ActivitiesStatus.FAILED;
-    default:
+    case ActivitiesStatus.IN_PROGRESS:
+      return ActivitiesStatus.IN_PROGRESS;
+    case ActivitiesStatus.PENDING:
       return ActivitiesStatus.PENDING;
+    default:
+      return 'unknown';
   }
 };
 

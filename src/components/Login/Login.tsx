@@ -35,11 +35,6 @@ const Login: FC<{
   const [error, setError] = React.useState<error>(initialErrors);
   const [phoneNumber, setPhoneNumber] = React.useState('');
 
-  useEffect(() => {
-    if (authState.isAuthenticated) {
-      console.log('authState.isAuthenticated');
-    }
-  }, [authState.isAuthenticated]);
   const login = async () => {
     if (isPasswordValid(password)) {
       if (authState.errors && authState.errors.length > 0) {

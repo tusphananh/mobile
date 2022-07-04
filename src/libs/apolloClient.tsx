@@ -1,12 +1,11 @@
 import {
   ApolloClient,
-  HttpLink,
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client';
 // import { createUploadLink } from "apollo-upload-client";
 import merge from 'deepmerge';
-import {IncomingHttpHeaders} from 'http';
+import {createUploadLink} from 'apollo-upload-client';
 import isEqual from 'lodash/isEqual';
 import {useMemo} from 'react';
 import env from '../config/env';
@@ -15,22 +14,18 @@ let apolloClient: ApolloClient<NormalizedCacheObject>;
 interface IApolloStateProps {
   [ApolloConstant.APOLLO_STATE_PROP_NAME]?: NormalizedCacheObject;
 }
-function createApolloClient(_headers: IncomingHttpHeaders | null = null) {
+function createApolloClient(_headers: any) {
   const enhancedFetch = async (url: RequestInfo, init: RequestInit) => {
     return fetch(url, {
       ...init,
       headers: {
         ...init.headers,
-        // 'Access-Control-Allow-Origin': '*',
-        // 'Access-Control-Allow-Credentials': 'true',
-        // "Access-Control-Request-Headers" : "Content-Type, Authorization",
         // Cookie: headers?.cookie ?? '',
       },
     });
   };
 
-  const httpLink = new HttpLink({
-    // uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
+  const httpLink = createUploadLink({
     uri: env.GRAPHQL_HOST,
     credentials: 'include', // Additional fetch() options like `credentials` or `headers`
     fetch: enhancedFetch,
@@ -51,7 +46,7 @@ export function initializeApollo(
     headers,
     initialState,
   }: {
-    headers?: IncomingHttpHeaders | null;
+    headers?: any;
     initialState?: NormalizedCacheObject | null;
   } = {headers: null, initialState: null},
 ) {
@@ -90,7 +85,6 @@ export function addApolloState(
   pageProps: {props: IApolloStateProps},
 ) {
   if (pageProps?.props) {
-    // eslint-disable-next-line prettier/prettier
     pageProps.props[ApolloConstant.APOLLO_STATE_PROP_NAME] =
       client.cache.extract();
   }

@@ -15,6 +15,7 @@ export enum AuthTypes {
   ADD_ITEMS = 'ADD_ITEMS',
   DELETE_ITEM = 'DELETE_ITEM',
   LOGOUT = 'LOGOUT',
+  UPDATE_BALANCE = 'UPDATE_BALANCE',
 }
 
 export type UserMaybe = {
@@ -116,6 +117,12 @@ export interface DeleteItemAction {
   };
 }
 
+export interface UpdateBalanceAction {
+  type: AuthTypes.UPDATE_BALANCE;
+  payload: {
+    balance: number;
+  };
+}
 export interface LogoutAction {
   type: AuthTypes.LOGOUT;
 }
@@ -132,4 +139,5 @@ export type AuthAction =
   | AddItemAction
   | AddItemsAction
   | DeleteItemAction
-  | LogoutAction;
+  | LogoutAction
+  | UpdateBalanceAction;

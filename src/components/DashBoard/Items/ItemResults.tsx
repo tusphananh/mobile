@@ -18,11 +18,16 @@ import {PickerItems} from '../../../constants/PickerConstant';
 import {useAuthContext} from '../../../contexts/authContext';
 import {filterItem} from '../../../utils/filter';
 import CollapsibleCard from '../../CollapsibleCard/CollapsibleCard';
-import globalStyles, {placeHolderColor} from '../../globalStyles';
+import globalStyles, {failedColor, placeHolderColor} from '../../globalStyles';
 import PickerSelect from '../../Picker/PickerSelect';
 import styles from './ItemsStyles';
 
-const ItemResults: React.FC<{navigation: any}> = ({navigation}) => {
+const ItemResults: React.FC<{
+  navigation: any;
+  onConfirmPress?: (item: ItemMaybe) => void;
+  confirmText?: string;
+  confirmColor?: string;
+}> = ({navigation, onConfirmPress, confirmText, confirmColor}) => {
   const [searchValue, setSearchValue] = React.useState('');
   const {authState} = useAuthContext();
   const [filteredItems, setFilteredItems] = React.useState<ItemMaybe[]>(
@@ -57,12 +62,17 @@ const ItemResults: React.FC<{navigation: any}> = ({navigation}) => {
         </TouchableOpacity>
         <ItemFilter setFilterType={setFilterType} setSortType={setSortType} />
       </View>
-      <ItemResultContainer items={filteredItems} />
+      <ItemResultContainer
+        onConfirmPress={onConfirmPress}
+        confirmText={confirmText}
+        confirmColor={confirmColor}
+        items={filteredItems}
+      />
     </View>
   );
 };
 
-const SearchBar: React.FC<{
+export const SearchBar: React.FC<{
   searchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
 }> = ({searchValue, setSearchValue}) => {
@@ -86,7 +96,7 @@ const SearchBar: React.FC<{
   );
 };
 
-const ItemFilter: React.FC<{
+export const ItemFilter: React.FC<{
   setFilterType: React.Dispatch<React.SetStateAction<FilterType>>;
   setSortType: React.Dispatch<React.SetStateAction<SortType>>;
 }> = ({setFilterType, setSortType}) => {
@@ -122,9 +132,12 @@ const ItemFilter: React.FC<{
   );
 };
 
-const ItemResultContainer: React.FC<{
+export const ItemResultContainer: React.FC<{
   items: ItemMaybe[];
-}> = ({items}) => {
+  onConfirmPress?: (item: ItemMaybe) => void;
+  confirmText?: string;
+  confirmColor?: string;
+}> = ({items, onConfirmPress, confirmText, confirmColor}) => {
   const {deleteItem} = useAuthContext();
   return (
     <ScrollView
@@ -142,9 +155,17 @@ const ItemResultContainer: React.FC<{
             <TouchableOpacity
               style={globalStyles.confirmBtn}
               onPress={() => {
-                deleteItem(parseInt(item.id, 10));
+                onConfirmPress
+                  ? onConfirmPress(item)
+                  : deleteItem(parseInt(item.id, 10));
               }}>
-              <Text style={globalStyles.cancelTxt}>Delete</Text>
+              <Text
+                style={[
+                  globalStyles.cancelTxt,
+                  {color: confirmColor || failedColor},
+                ]}>
+                {confirmText || 'Delete'}
+              </Text>
             </TouchableOpacity>
           </CollapsibleCard>
         );

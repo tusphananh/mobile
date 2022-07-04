@@ -1,5 +1,5 @@
 import {Socket} from 'socket.io-client';
-import {User} from '../graphql-generated/graphql';
+import {UserMaybe} from './AuthConstants';
 import {Position} from './DashBoardConstants';
 import {ClientToServerEvents, ServerToClientEvents} from './SocketConstants';
 
@@ -38,7 +38,7 @@ export interface SearchResult {
   searchId: string;
   id: string;
   providerPosition: Position;
-  provider: User;
+  provider: UserMaybe;
   name: string;
   itemName: string;
   itemPrice: number;

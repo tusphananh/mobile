@@ -8,6 +8,7 @@ import React, {
   useReducer,
 } from 'react';
 import {
+  updateBalanceAction,
   addItemAction,
   checkSessionFailure,
   checkSessionSuccess,
@@ -23,6 +24,7 @@ import {
 } from '../actions/authActions';
 import {AuthAction, AuthState} from '../constants/AuthConstants';
 import {
+  useAddBalanceMutation,
   useAddItemMutation,
   useCheckSessionLazyQuery,
   useDeleteItemMutation,
@@ -71,6 +73,7 @@ export const AuthContext = createContext<{
   deleteItem: (id: number) => void;
   authLogin: (phone: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  topUp: (amount: number) => Promise<void>;
 }>({
   authState: initialState,
   authDispatch: () => undefined,
@@ -79,10 +82,19 @@ export const AuthContext = createContext<{
   addItem: () => {},
   deleteItem: () => {},
   logout: async () => {},
+  topUp: async () => {},
 });
 
 export const AuthProvider: FC = ({children}) => {
   const [authState, authDispatch] = useReducer(AuthReducer, initialState);
+  const [topUpMutation] = useAddBalanceMutation({
+    onCompleted: data => {
+      const response = data?.addBalance;
+      if (response?.success) {
+        authDispatch(updateBalanceAction(response.data!.balance));
+      }
+    },
+  });
   const [checkSession] = useCheckSessionLazyQuery({
     onCompleted: data => {
       const response = data?.checkSession;
@@ -151,6 +163,14 @@ export const AuthProvider: FC = ({children}) => {
     await logoutQuery();
   };
 
+  const topUp = async (amount: number) => {
+    await topUpMutation({
+      variables: {
+        amount,
+      },
+    });
+  };
+
   const authRegsiter = async (
     phone: string,
     firstName: string,
@@ -211,6 +231,7 @@ export const AuthProvider: FC = ({children}) => {
     addItem,
     deleteItem,
     logout,
+    topUp,
   };
 
   return (

@@ -98,6 +98,10 @@ const Profile: React.FC<{navigation: any}> = ({navigation}) => {
               style={[globalStyles.confirmBtn, globalStyles.fullWidth]}>
               <Text style={globalStyles.confirmTxt}>Edit</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={[globalStyles.confirmBtn, globalStyles.fullWidth]}>
+              <Text style={globalStyles.confirmTxt}>Change Password</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>

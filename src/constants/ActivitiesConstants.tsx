@@ -9,12 +9,14 @@ export enum ActivitiesTypes {
   REMOVE_RENT_ACTIVITY = 'REMOVE_RENT_ACTIVITY',
   ADD_MESSAGE = 'ADD_MESSAGE',
   SET_CHAT_SOCKET = 'SET_CHAT_SOCKET',
+  UPDATE_ACTIVITY = 'UPDATE_ACTIVITY',
 }
 
 export enum ActivitiesStatus {
   PENDING = 'pending',
   SUCCESS = 'success',
   FAILED = 'failed',
+  IN_PROGRESS = 'in_progress',
 }
 
 export type ActivityMaybe = {
@@ -140,6 +142,13 @@ export interface SetChatSocketAction {
   };
 }
 
+export interface UpdateActivityAction {
+  type: ActivitiesTypes.UPDATE_ACTIVITY;
+  payload: {
+    activity: ActivityMaybe;
+  };
+}
+
 export type ActivitiesAction =
   | AddProvideActivitiesAction
   | AddProvideActivityAction
@@ -148,4 +157,5 @@ export type ActivitiesAction =
   | AddRentActivityAction
   | RemoveRentActivityAction
   | AddMessageAction
-  | SetChatSocketAction;
+  | SetChatSocketAction
+  | UpdateActivityAction;

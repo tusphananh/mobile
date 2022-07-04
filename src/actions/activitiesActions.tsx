@@ -10,9 +10,11 @@ import {
   RemoveProvideActivityAction,
   RemoveRentActivityAction,
   SetChatSocketAction,
+  UpdateActivityAction,
 } from '../constants/ActivitiesConstants';
 import {getSocket} from '../libs/socket';
 import env from '../config/env';
+
 export const addProvideActivity = (
   activity: ActivityMaybe,
 ): AddProvideActivityAction => ({
@@ -82,6 +84,17 @@ export const setChatSocket = (): SetChatSocketAction => {
     type: ActivitiesTypes.SET_CHAT_SOCKET,
     payload: {
       socket: socket,
+    },
+  };
+};
+
+export const updateActivity = (
+  activity: ActivityMaybe,
+): UpdateActivityAction => {
+  return {
+    type: ActivitiesTypes.UPDATE_ACTIVITY,
+    payload: {
+      activity: activity,
     },
   };
 };

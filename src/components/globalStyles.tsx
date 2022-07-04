@@ -4,6 +4,7 @@ export const primaryColor = '#34AE73';
 export const successColor = '#34AE73';
 export const failedColor = '#F44336';
 export const pendingColor = '#FFC107';
+export const inProgressColor = '#2196F3';
 export const txtColor = '#F5F5F5';
 export const placeHolderColor = '#9E9E9E';
 export const lineColor = 'rgba(100,100,100,0.3)';
@@ -11,6 +12,14 @@ export const primaryLowOpacity = 'rgba(52, 174, 115, 0.3)';
 export const darkLowOpacity = 'rgba(30, 30, 30, 0.3)';
 export const darkMediumOpacity = 'rgba(30, 30, 30, 0.5)';
 const globalStyles = StyleSheet.create({
+  centerHorizontal: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  centerVertical: {
+    marginTop: 'auto',
+    marginBottom: 'auto',
+  },
   h1: {
     fontSize: 30,
     color: '#fff',
@@ -106,6 +115,9 @@ const globalStyles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
+  mt80: {
+    marginTop: 80,
+  },
   mb5: {
     marginBottom: 5,
   },
@@ -174,7 +186,7 @@ const globalStyles = StyleSheet.create({
   cancelTxt: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#F44336',
+    color: failedColor,
   },
 
   confirmTxt: {
@@ -198,6 +210,22 @@ const globalStyles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flexColCenter: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flexColCenterVertical: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  flexColCenterHorizontal: {
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
   },
   fullWidth: {

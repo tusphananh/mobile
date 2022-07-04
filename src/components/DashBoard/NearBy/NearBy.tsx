@@ -9,33 +9,23 @@ import {
   View,
 } from 'react-native';
 import {removeNearByItem} from '../../../actions/searchActions';
+import {ItemMaybe} from '../../../constants/ItemsConstants';
 import {NearByItem} from '../../../constants/SearchConstants';
 import {useSearchContext} from '../../../contexts/searchContext';
 import Background from '../../Background/Background';
 import CollapsibleCard from '../../CollapsibleCard/CollapsibleCard';
 import globalStyles from '../../globalStyles';
 import Header from '../../Header/Header';
+import {NearByConfirm, ItemPicker} from './NearByConfirm';
 import styles from './NearByStyles';
 
 const Stack = createStackNavigator();
 
-const NearByConfirm: React.FC<{
-  item?: NearByItem;
-}> = ({item}) => {
-  return (
-    <Background>
-      <SafeAreaView style={globalStyles.fullWidthHeight}>
-        <Text>{item?.name}</Text>
-      </SafeAreaView>
-    </Background>
-  );
-};
 const NearByResults: React.FC<{
-  items?: NearByItem[];
-  setSelectedItem: (item: NearByItem) => void;
+  setNearByItem: (item: NearByItem) => void;
   navigation: any;
-}> = ({items, setSelectedItem, navigation}) => {
-  const {searchDispatch} = useSearchContext();
+}> = ({setNearByItem, navigation}) => {
+  const {searchDispatch, searchState} = useSearchContext();
   return (
     <Background>
       <SafeAreaView style={globalStyles.fullWidthHeight}>
@@ -43,7 +33,7 @@ const NearByResults: React.FC<{
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={globalStyles.fullWidth}>
-          {items?.map((item: NearByItem) => (
+          {searchState.nearByItems?.map((item: NearByItem) => (
             <CollapsibleCard
               style={styles.card}
               key={item.id}
@@ -70,7 +60,8 @@ const NearByResults: React.FC<{
                 <TouchableOpacity
                   style={(globalStyles.confirmBtn, styles.btn)}
                   onPress={() => {
-                    setSelectedItem(item);
+                    setNearByItem(item);
+                    navigation.navigate('NearByConfirm');
                   }}>
                   <Text style={[globalStyles.confirmTxt]}>Approve</Text>
                 </TouchableOpacity>
@@ -83,38 +74,51 @@ const NearByResults: React.FC<{
   );
 };
 const NearBy: React.FC<{navigation: any}> = ({navigation}) => {
-  const {searchState} = useSearchContext();
-  const [selectedItem, setSelectedItem] = React.useState<
-    NearByItem | undefined
-  >(undefined);
+  const [nearByItem, setNearByItem] = React.useState<NearByItem>();
+  const [pickedItem, setPickedItem] = React.useState<ItemMaybe>();
+  const pickItem = (item: ItemMaybe) => {
+    setPickedItem(item);
+  };
 
   return (
     <Stack.Navigator>
-      {!selectedItem ? (
-        <Stack.Screen
-          name="NearByResults"
-          options={{
-            headerShown: false,
-            animationTypeForReplace: 'push',
-          }}
-          children={() => (
-            <NearByResults
-              navigation={navigation}
-              setSelectedItem={setSelectedItem}
-              items={searchState.nearByItems}
-            />
-          )}
-        />
-      ) : (
-        <Stack.Screen
-          name="NearByConfirm"
-          options={{
-            headerShown: false,
-            animationTypeForReplace: 'push',
-          }}
-          children={() => <NearByConfirm item={selectedItem} />}
-        />
-      )}
+      <Stack.Screen
+        name="NearByResults"
+        options={{
+          headerShown: false,
+          animationTypeForReplace: 'push',
+        }}
+        children={() => (
+          <NearByResults
+            navigation={navigation}
+            setNearByItem={setNearByItem}
+          />
+        )}
+      />
+      <Stack.Screen
+        name="NearByConfirm"
+        options={{
+          headerShown: false,
+          animationTypeForReplace: 'push',
+        }}
+        children={() => (
+          <NearByConfirm
+            pickedItem={pickedItem}
+            navigation={navigation}
+            nearbyItem={nearByItem}
+          />
+        )}
+      />
+      <Stack.Screen
+        name="ItemPicker"
+        children={() => (
+          <ItemPicker pickItem={pickItem} navigation={navigation} />
+        )}
+        options={{
+          headerShown: false,
+          animationTypeForReplace: 'push',
+        }}
+      />
     </Stack.Navigator>
   );
 };

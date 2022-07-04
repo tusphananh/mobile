@@ -1,9 +1,7 @@
 import {gql} from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends {[key: string]: unknown}> = {
-  [K in keyof T]: T[K];
-};
+export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]};
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]?: Maybe<T[SubKey]>;
 };
@@ -137,6 +135,7 @@ export type Mutation = {
   addMessage?: Maybe<MessageResponse>;
   deleteItem?: Maybe<ItemResponse>;
   failActivity?: Maybe<ActivityResponse>;
+  inProgressActivity?: Maybe<ActivityResponse>;
   login?: Maybe<UserResponse>;
   logout?: Maybe<UserResponse>;
   register?: Maybe<UserResponse>;
@@ -182,6 +181,10 @@ export type MutationDeleteItemArgs = {
 };
 
 export type MutationFailActivityArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationInProgressActivityArgs = {
   id: Scalars['String'];
 };
 
@@ -239,6 +242,7 @@ export type User = {
   createdAt: Scalars['DateTime'];
   firstName: Scalars['String'];
   id: Scalars['ID'];
+  isVerified: Scalars['Boolean'];
   items: Array<Item>;
   lastName: Scalars['String'];
   phone: Scalars['String'];
@@ -348,6 +352,7 @@ export type UserResponseFragmentFragment = {
   balance: number;
   createdAt: any;
   updatedAt: any;
+  isVerified: boolean;
   items: Array<{
     __typename?: 'Item';
     id: string;
@@ -563,6 +568,71 @@ export type SuccessActivityMutation = {
   }>;
 };
 
+export type InProgressActivityMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type InProgressActivityMutation = {
+  __typename?: 'Mutation';
+  inProgressActivity?: Maybe<{
+    __typename?: 'ActivityResponse';
+    code: number;
+    success: boolean;
+    errors?: Maybe<
+      Array<{__typename?: 'ErrorResponse'; field: string; message: string}>
+    >;
+    data: {
+      __typename?: 'Activity';
+      id: string;
+      name: string;
+      itemName: string;
+      itemDescription: string;
+      itemPrice: number;
+      itemRealValue: number;
+      totalPrice: number;
+      duration: number;
+      distance: number;
+      status: string;
+      createdAt: any;
+      updatedAt: any;
+      provider: {
+        __typename?: 'User';
+        id: string;
+        firstName: string;
+        lastName: string;
+        phone: string;
+      };
+      renter: {
+        __typename?: 'User';
+        id: string;
+        firstName: string;
+        lastName: string;
+        phone: string;
+      };
+      chat: {
+        __typename?: 'Chat';
+        id: string;
+        title: string;
+        createdAt: any;
+        messages: Array<{
+          __typename?: 'Message';
+          id: string;
+          createdAt: any;
+          text: string;
+          chatId: number;
+          user: {
+            __typename?: 'User';
+            id: string;
+            firstName: string;
+            lastName: string;
+            phone: string;
+          };
+        }>;
+      };
+    };
+  }>;
+};
+
 export type AddMessageMutationVariables = Exact<{
   id: Scalars['String'];
   chatId: Scalars['Float'];
@@ -617,6 +687,7 @@ export type AddBalanceMutation = {
       balance: number;
       createdAt: any;
       updatedAt: any;
+      isVerified: boolean;
       items: Array<{
         __typename?: 'Item';
         id: string;
@@ -651,6 +722,7 @@ export type SubtractBalanceMutation = {
       balance: number;
       createdAt: any;
       updatedAt: any;
+      isVerified: boolean;
       items: Array<{
         __typename?: 'Item';
         id: string;
@@ -765,6 +837,7 @@ export type LoginMutation = {
       balance: number;
       createdAt: any;
       updatedAt: any;
+      isVerified: boolean;
       items: Array<{
         __typename?: 'Item';
         id: string;
@@ -797,6 +870,7 @@ export type LogoutMutation = {
       balance: number;
       createdAt: any;
       updatedAt: any;
+      isVerified: boolean;
       items: Array<{
         __typename?: 'Item';
         id: string;
@@ -834,6 +908,7 @@ export type RegisterMutation = {
       balance: number;
       createdAt: any;
       updatedAt: any;
+      isVerified: boolean;
       items: Array<{
         __typename?: 'Item';
         id: string;
@@ -869,6 +944,7 @@ export type UploadIdImageMutation = {
       balance: number;
       createdAt: any;
       updatedAt: any;
+      isVerified: boolean;
       items: Array<{
         __typename?: 'Item';
         id: string;
@@ -944,9 +1020,7 @@ export type GetRentActivitiesQuery = {
   }>;
 };
 
-export type GetProvideActivitiesQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type GetProvideActivitiesQueryVariables = Exact<{[key: string]: never}>;
 
 export type GetProvideActivitiesQuery = {
   __typename?: 'Query';
@@ -1020,11 +1094,7 @@ export type GetImageIdQuery = {
     errors?: Maybe<
       Array<{__typename?: 'ErrorResponse'; field: string; message: string}>
     >;
-    data?: Maybe<{
-      __typename?: 'ImageID';
-      frontSide: string;
-      backSide: string;
-    }>;
+    data?: Maybe<{__typename?: 'ImageID'; frontSide: string; backSide: string}>;
   }>;
 };
 
@@ -1048,6 +1118,7 @@ export type CheckSessionQuery = {
       balance: number;
       createdAt: any;
       updatedAt: any;
+      isVerified: boolean;
       items: Array<{
         __typename?: 'Item';
         id: string;
@@ -1080,6 +1151,7 @@ export type RefreshSessionQuery = {
       balance: number;
       createdAt: any;
       updatedAt: any;
+      isVerified: boolean;
       items: Array<{
         __typename?: 'Item';
         id: string;
@@ -1173,6 +1245,7 @@ export const UserResponseFragmentFragmentDoc = gql`
     balance
     createdAt
     updatedAt
+    isVerified
     items {
       ...ItemResponseFragment
     }
@@ -1389,6 +1462,65 @@ export type SuccessActivityMutationResult =
 export type SuccessActivityMutationOptions = Apollo.BaseMutationOptions<
   SuccessActivityMutation,
   SuccessActivityMutationVariables
+>;
+export const InProgressActivityDocument = gql`
+  mutation inProgressActivity($id: String!) {
+    inProgressActivity(id: $id) {
+      code
+      success
+      errors {
+        ...ErrosResponseFragment
+      }
+      data {
+        ...ActivityResponseFragment
+      }
+    }
+  }
+  ${ErrosResponseFragmentFragmentDoc}
+  ${ActivityResponseFragmentFragmentDoc}
+`;
+export type InProgressActivityMutationFn = Apollo.MutationFunction<
+  InProgressActivityMutation,
+  InProgressActivityMutationVariables
+>;
+
+/**
+ * __useInProgressActivityMutation__
+ *
+ * To run a mutation, you first call `useInProgressActivityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInProgressActivityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [inProgressActivityMutation, { data, loading, error }] = useInProgressActivityMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useInProgressActivityMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    InProgressActivityMutation,
+    InProgressActivityMutationVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions};
+  return Apollo.useMutation<
+    InProgressActivityMutation,
+    InProgressActivityMutationVariables
+  >(InProgressActivityDocument, options);
+}
+export type InProgressActivityMutationHookResult = ReturnType<
+  typeof useInProgressActivityMutation
+>;
+export type InProgressActivityMutationResult =
+  Apollo.MutationResult<InProgressActivityMutation>;
+export type InProgressActivityMutationOptions = Apollo.BaseMutationOptions<
+  InProgressActivityMutation,
+  InProgressActivityMutationVariables
 >;
 export const AddMessageDocument = gql`
   mutation addMessage($id: String!, $chatId: Float!, $text: String!) {

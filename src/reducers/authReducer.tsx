@@ -111,6 +111,16 @@ export const AuthReducer = (
         errors: [],
       };
 
+    case AuthTypes.UPDATE_BALANCE:
+      return {
+        ...state,
+        isFetching: false,
+        user: {
+          ...state.user!,
+          balance: action.payload.balance,
+        },
+      };
+
     default:
       return state;
   }

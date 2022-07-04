@@ -18,6 +18,7 @@ import globalStyles, {
 import styles from './AccountStyles';
 import Profile from './Profile/Profile';
 import TopUp from './TopUp/TopUp';
+import Verify from './Verify/Verify';
 
 const TouchableCard: React.FC<{
   title: string;
@@ -81,6 +82,13 @@ const MainAccountPage: React.FC<{navigation: any}> = ({navigation}) => {
             }}
           />
           <TouchableCard
+            color={primaryColor}
+            title="Verify"
+            onPress={() => {
+              navigation.navigate('Verify');
+            }}
+          />
+          <TouchableCard
             style={globalStyles.mtat}
             title="Logout"
             onPress={() => {
@@ -114,6 +122,14 @@ const Account: React.FC<{navigation: any}> = ({navigation}) => {
           animationTypeForReplace: 'push',
         }}
         component={Profile}
+      />
+      <Stack.Screen
+        name="Verify"
+        options={{
+          headerShown: false,
+          animationTypeForReplace: 'push',
+        }}
+        component={Verify}
       />
       <Stack.Screen
         name="TopUp"

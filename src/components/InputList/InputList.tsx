@@ -22,6 +22,7 @@ const InputList: React.FC<{
             placeholderTextColor={item.placeholderTextColor || placeHolderColor}
             value={item.value}
             onChangeText={item.onChangeText}
+            key={item.placeholder + '-input'}
           />
         );
       })}
