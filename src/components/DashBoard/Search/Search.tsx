@@ -230,7 +230,7 @@ const Search: React.FC<{}> = ({}) => {
   useEffect(() => {
     if (isExpanded) {
       Animated.timing(progress, {
-        toValue: 50,
+        toValue: 130,
         useNativeDriver: false,
       }).start();
     } else {
@@ -245,13 +245,13 @@ const Search: React.FC<{}> = ({}) => {
   useEffect(() => {
     if (keyboardStatus) {
       Animated.timing(keyboardProgress, {
-        toValue: keyboardHeight - 100,
+        toValue: keyboardHeight - 20,
         useNativeDriver: false,
         duration: 300,
       }).start();
     } else {
       Animated.timing(keyboardProgress, {
-        toValue: 0,
+        toValue: 80,
         useNativeDriver: false,
         duration: 300,
       }).start();

@@ -3,7 +3,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {SafeAreaView} from 'react-native';
-import {useActivitiesContext} from '../../../contexts/activitiesContext';
 import Background from '../../Background/Background';
 import globalStyles, {primaryColor} from '../../globalStyles';
 import Header from '../../Header/Header';
@@ -11,7 +10,6 @@ import MessagePreview from './MessagePreview';
 const Tab = createBottomTabNavigator();
 
 const Message: React.FC<{navigation: any}> = ({navigation}) => {
-  const {activitiesState} = useActivitiesContext();
   return (
     <Background>
       <SafeAreaView style={globalStyles.fullWidthHeight}>
@@ -37,9 +35,7 @@ const Message: React.FC<{navigation: any}> = ({navigation}) => {
               ),
             }}
             name="Rent Chats"
-            children={() => (
-              <MessagePreview activity={activitiesState.rentActivities} />
-            )}
+            children={() => <MessagePreview type="rent" />}
           />
           <Tab.Screen
             options={{
@@ -52,9 +48,7 @@ const Message: React.FC<{navigation: any}> = ({navigation}) => {
               ),
             }}
             name="Provide Chats"
-            children={() => (
-              <MessagePreview activity={activitiesState.provideActivities} />
-            )}
+            children={() => <MessagePreview type="provide" />}
           />
         </Tab.Navigator>
       </SafeAreaView>

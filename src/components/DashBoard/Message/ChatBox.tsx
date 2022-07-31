@@ -14,23 +14,25 @@ import {
   View,
 } from 'react-native';
 import uuid from 'react-native-uuid';
-import {ChatMaybe} from '../../../constants/ActivitiesConstants';
 import {useActivitiesContext} from '../../../contexts/activitiesContext';
 import {useAuthContext} from '../../../contexts/authContext';
 import {formatTime} from '../../../utils/formatter';
 import globalStyles, {placeHolderColor, primaryColor} from '../../globalStyles';
 import styles from './ChatBoxStyles';
 
-const ChatBox: React.FC<{navigation: any; chat: ChatMaybe}> = ({
+const ChatBox: React.FC<{navigation: any; route: any}> = ({
   navigation,
-  chat,
+  route,
 }) => {
+  const {chat, type} = route.params;
+  const [liveChat, setLiveChat] = useState(chat);
+  const {activitiesState} = useActivitiesContext();
   const {authState} = useAuthContext();
   const [text, setText] = React.useState('');
   const {sendMessage} = useActivitiesContext();
   const send = () => {
     if (text !== '') {
-      sendMessage(toString(uuid.v4()), toNumber(chat.id), text);
+      sendMessage(toString(uuid.v4()), toNumber(liveChat.id), text);
       setText('');
     }
   };
@@ -38,6 +40,21 @@ const ChatBox: React.FC<{navigation: any; chat: ChatMaybe}> = ({
   const [keyboardProgress] = useState(new Animated.Value(0));
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
+
+  useEffect(() => {
+    if (type === 'rent') {
+      setLiveChat(
+        activitiesState.rentActivities.find(item => item.chat.id === chat.id)
+          ?.chat,
+      );
+    } else {
+      setLiveChat(
+        activitiesState.provideActivities.find(item => item.chat.id === chat.id)
+          ?.chat,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activitiesState]);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardWillShow', e => {
@@ -83,7 +100,7 @@ const ChatBox: React.FC<{navigation: any; chat: ChatMaybe}> = ({
               back
             </Text>
           </TouchableOpacity>
-          <Text style={styles.title}>{chat.title}</Text>
+          <Text style={styles.title}>{liveChat.title}</Text>
         </View>
         <View style={styles.chatBox}>
           <ScrollView
@@ -92,33 +109,44 @@ const ChatBox: React.FC<{navigation: any; chat: ChatMaybe}> = ({
             onContentSizeChange={() =>
               scrollViewRef.current?.scrollToEnd({animated: true})
             }>
-            {chat.messages.map(message => {
-              if (message?.user.id === authState.user?.id) {
-                return (
-                  <View
-                    key={message!.id}
-                    style={styles.messageContainer__owner}>
-                    <Text style={styles.time}>
-                      {formatTime(message?.createdAt)}
-                    </Text>
-                    <View style={styles.message}>
-                      <Text style={globalStyles.subtitle}>{message?.text}</Text>
+            {liveChat.messages.map(
+              (message: {
+                id: string;
+                user: {id: string; name: string};
+                createdAt: string;
+                text: {} | null | undefined;
+              }) => {
+                if (message?.user.id === authState.user?.id) {
+                  return (
+                    <View
+                      key={message!.id}
+                      style={styles.messageContainer__owner}>
+                      <Text style={styles.time}>
+                        {formatTime(message?.createdAt)}
+                      </Text>
+                      <View style={styles.message}>
+                        <Text style={globalStyles.subtitle}>
+                          {message?.text}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                );
-              } else {
-                return (
-                  <View key={message!.id} style={styles.messageContainer}>
-                    <View style={styles.message}>
-                      <Text style={globalStyles.subtitle}>{message?.text}</Text>
+                  );
+                } else {
+                  return (
+                    <View key={message!.id} style={styles.messageContainer}>
+                      <View style={styles.message}>
+                        <Text style={globalStyles.subtitle}>
+                          {message?.text}
+                        </Text>
+                      </View>
+                      <Text style={styles.time}>
+                        {formatTime(message?.createdAt)}
+                      </Text>
                     </View>
-                    <Text style={styles.time}>
-                      {formatTime(message?.createdAt)}
-                    </Text>
-                  </View>
-                );
-              }
-            })}
+                  );
+                }
+              },
+            )}
           </ScrollView>
         </View>
         <Animated.View
